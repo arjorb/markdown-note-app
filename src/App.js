@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Editor from './components/Editor';
 import Split from 'react-split';
@@ -7,24 +7,23 @@ import 'react-mde/lib/styles/css/react-mde-all.css';
 import { nanoid } from 'nanoid';
 
 export default function App() {
-  const [notes, setNotes] = React.useState(() => JSON.parse(localStorage.getItem('notes')) || []);
-  const [currentNoteId, setCurrentNoteId] = React.useState((notes[0] && notes[0].id) || '');
+  const [notes, setNotes] = useState(() => JSON.parse(localStorage.getItem('notes')) || []);
+  const [currentNoteId, setCurrentNoteId] = useState((notes[0] && notes[0].id) || '');
 
-  React.useEffect(() => {
+  useEffect(() => {
     localStorage.setItem('notes', JSON.stringify(notes));
   }, [notes]);
 
   function createNewNote() {
     const newNote = {
       id: nanoid(),
-      body: "# Type your markdown note's title here",
+      body: '# This Is a Title',
     };
     setNotes(prevNotes => [newNote, ...prevNotes]);
     setCurrentNoteId(newNote.id);
   }
 
   function updateNote(text) {
-    // Put the most recently-modified note at the top
     setNotes(oldNotes => {
       const newArray = [];
       for (let i = 0; i < oldNotes.length; i++) {
