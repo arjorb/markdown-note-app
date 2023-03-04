@@ -25,16 +25,12 @@ export default function App() {
 
   function updateNote(text) {
     setNotes(oldNotes => {
-      const newArray = [];
-      for (let i = 0; i < oldNotes.length; i++) {
-        const oldNote = oldNotes[i];
-        if (oldNote.id === currentNoteId) {
-          newArray.unshift({ ...oldNote, body: text });
-        } else {
-          newArray.push(oldNote);
+      return oldNotes.map(note => {
+        if (note.id === currentNoteId) {
+          return { ...note, body: text };
         }
-      }
-      return newArray;
+        return note;
+      });
     });
   }
 
@@ -57,12 +53,14 @@ export default function App() {
         <Split sizes={[30, 70]} direction='horizontal' className='split'>
           <Sidebar
             notes={notes}
-            currentNote={findCurrentNote()}
+            currentNote={findCurrentNote(notes.id)}
             setCurrentNoteId={setCurrentNoteId}
             newNote={createNewNote}
             deleteNote={deleteNote}
           />
-          {currentNoteId && notes.length > 0 && <Editor currentNote={findCurrentNote()} updateNote={updateNote} />}
+          {currentNoteId && notes.length > 0 && (
+            <Editor currentNote={findCurrentNote(notes.id)} updateNote={updateNote} />
+          )}
         </Split>
       ) : (
         <div className='no-notes'>
